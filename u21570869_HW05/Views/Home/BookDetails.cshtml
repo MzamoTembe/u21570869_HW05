@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "BookDetails";
+}
+
+
+<h1> @Model.myBook.Name 
+    @{ 
+        if(@Model.myBook.Status == "Available")
+        {
+            <span style="color: green"> - Book is @Model.myBook.Status</span>
+        }
+        else
+        {
+            <span style="color: red"> - Book is @Model.myBook.Status</span>
+        }
+    }
+    </h1> 
+@*Shows the amount of books borrowed and then pushes book ID to Students view*@
+<h2>Borrows: @Model.myBook.Borrows <button class="btn btn-primary navbar-right" type="submit" onclick="location.href='@Url.Action("Students", "Home", new { ID = @Model.myBook.ID })'"> View Students </button> </h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col"> Taken Date </th>
+            <th scope="col"> Brought Date </th>
+            <th scope="col"> Borrowed By </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Borrows)
+        {
+        <tr>
+            <th scope="row">@item.ID</th>
+            <td>@item.TakenDate</td>
+            <td>@item.BroughtDate</td>
+            <td>@item.Student.Name</td>
+            
+        </tr>
+        }
+    </tbody>
+</table>

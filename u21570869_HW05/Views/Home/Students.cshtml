@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Students";
+}
+
+<h2>Students</h2>
+
+<div class="row">
+    <form method="post">
+        <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Search Student Name" name="studentname">
+        </div>
+        <div class="col-md-3">
+            <select id="inputType" class="form-control" name="studentclass">
+                @*List from the model*@
+                <option selected disabled>Select a class</option>
+                @{
+                    foreach (var item in Model.StudentClasses)
+                    {
+                        <option id="class" value="@item">@item</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3"> <button type="submit" class="btn btn-success"> Search </button> </div>
+    </form>
+    @*Refreshes the page to load new list*@
+    <div class="col-md-3"> <button class="btn btn-danger my-1" onclick="location.href='@Url.Action("Students", "Home", new { ID = @Model.myBook.ID })'"> Clear </button> </div>
+</div>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Surname</th>
+            <th scope="col">Class</th>
+            <th scope="col">Point</th>
+            <th scope="col"> Return Book </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model.Students)
+        {
+        <tr>
+            <th scope="row">@student.ID</th>
+            <td>@student.Name</td>
+            <td>@student.Surname</td>
+            <td>@student.Class</td>
+            <td>@student.Point</td>
+
+            @{
+                if (Model.myBook.Status == "Out")
+                {
+                    //if student ID matches with borrow student id then show the retur button, BorrowID will be pushed to controller for processing.
+                    if (@student.ID == @Model.Borrow.Student.ID)
+                    {
+                        <td> <button class="btn btn-primary" type="submit" onclick="location.href='@Url.Action("ReturnBook", "Home", new { ID = @Model.myBook.ID, BorrowID = @Model.Borrow.ID })'"> Return Book </button></td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                }
+                //Show button option for everyone to borrow, Student ID will be pushed to controller for processing
+                else if (Model.myBook.Status == "Available")
+                {
+                    <td> <button class="btn btn-primary" type="submit" onclick="location.href='@Url.Action("BorrowBook", "Home", new { ID = @Model.myBook.ID, StudID = @student.ID })'"> Borrow Book </button></td>
+                }
+                else
+                {
+                    <td></td>
+                }
+            }
+        </tr>
+        }
+    </tbody>
+</table>

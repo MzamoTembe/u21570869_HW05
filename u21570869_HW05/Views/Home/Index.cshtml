@@ -1,0 +1,83 @@
+﻿@using u21570869_HW05.Models
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h1> Books </h1>
+
+<div class="row">
+    <form method="post" id="search">
+        <div class="col-md-4"> <input type="text" class="form-control" placeholder="Search Book Name" name="bookname" style="max-width: 100%; margin-bottom: 10px"> </div>
+        <div class="col-md-2">
+            @*Dropdown that contains the author names from model*@
+            <select id="inputAuthor" class="form-control" name="author" style="max-width: 100%; margin-bottom: 10px">
+                <option selected disabled>Author</option>
+                @{
+                    foreach (var item in Model.AuthorNames)
+                    {
+                        <option id="author" value="@item">@item</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            @*Dropdown that contains the type names from model*@
+            <select id="inputType" class="form-control" name="type" style="max-width: 100%; margin-bottom: 10px">
+                <option selected disabled>Type</option>
+                @{
+                    foreach (var type in Model.TypeNames)
+                    {
+                        <option id="type" value="@type">@type</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-success" style="max-width: 100%; margin-bottom: 10px"> Search </button>
+        </div>
+    </form>
+    <div class="col-md-2">
+        @*Refreshes the page to load fresh list*@
+        <button class="btn btn-danger my-1" onclick="location.href='@Url.Action("Index", "Home")'" style="max-width: 100%; margin-bottom: 10px"> Clear </button>
+    </div>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Author</th>
+            <th scope="col">Type</th>
+            <th scope="col">Page Count</th>
+            <th scope="col">Points</th>
+            <th scope="col">Status</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model.Books)
+        {
+            <tr>
+                <th scope="row">@book.ID</th>
+                <td>@book.Name</td>
+                <td>@book.Author.Name</td>
+                <td>@book.BookType.Name</td>
+                <td>@book.PageCount</td>
+                <td>@book.Point</td>
+                @{
+                    if (@book.Status == "Available")
+                    {
+                        <td style="color: green">@book.Status</td>
+                    }
+                    else
+                    {
+                        <td style="color: red">@book.Status</td>
+                    }
+                }
+                @*Push BookID to BookDetails view from this button*@
+                <td> <button  class="btn btn-primary" type="submit" onclick="location.href='@Url.Action("BookDetails", "Home", new { ID = @book.ID })'">View</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
